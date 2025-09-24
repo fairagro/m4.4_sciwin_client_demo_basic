@@ -4,7 +4,7 @@ This repo contains the scripts to perform a small SciWIn-Client Demo. This instr
 ![](https://github.com/fairagro/m4.4_sciwin_client_demo_ta4_retreat_2024/blob/complete_run/workflow.svg)
 
 ## Demo Commands
-To check if SciWIn is available type `s4n --version` which should output something like `s4n 0.6.0`.
+To check if SciWIn is available type `s4n --version` which should output something like `s4n 1.0.0`.
 ### Initializing a Project
 To begin the journey use `s4n init` to initialize a project in the current directory.
 ```bash
@@ -17,11 +17,11 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 ### Creation of CommandLineTools
-To create the two CommandLineTools needed for the demo you just have to prefix the execution commands with `s4n tool create` or `s4n run`.
+To create the two CommandLineTools needed for the demo you just have to prefix the execution commands with `s4n create`.
 #### Calculation
 To create the `calculation.cwl` tool run the following command:
 ```bash
-s4n tool create python calculation.py --population population.csv --speakers speakers.csv
+s4n create python calculation.py --population population.csv --speakers speakers.csv
 ```
 which will output something like
 ```
@@ -48,7 +48,7 @@ Total population: 7694245029
 #### Plot
 The Plot tool will use the created results.csv. The creation command is 
 ```bash
-s4n run python plot.py --results results.csv
+s4n create python plot.py --results results.csv
 ```
 which will lead to the following output:
 ```
@@ -62,9 +62,9 @@ which will lead to the following output:
 ```
 ### Workflow Creation
 #### Workflow Creation
-To create a Workflow with name `demo` simply call 
+To create a Workflow with name `demo` simply call. However this is optional as it will be executed automatically upon running the `connect` command the first time.
 ```bash
-s4n workflow create demo
+s4n create --name demo
 ```
 which will output
 ```
@@ -72,13 +72,13 @@ which will output
 ```
 
 #### Connecting Tools
-To connect the steps in the workflow you need to call `s4n workflow connect` a couple of times.
+To connect the steps in the workflow you need to call `s4n connect` a couple of times.
 
 ##### Connecting Inputs
 First we will connect the `calculation` tool to the input sockets. The tool has two inputs which we will connect to the `speaker`s and `pop` input.
 ```bash
-s4n workflow connect demo --from @inputs/speakers --to calculation/speakers
-s4n workflow connect demo --from @inputs/pop --to calculation/population
+s4n connect demo --from @inputs/speakers --to calculation/speakers
+s4n connect demo --from @inputs/pop --to calculation/population
 ```
 An example output looks like
 ```
@@ -90,7 +90,7 @@ An example output looks like
 ##### Connecting Tools
 We now will connect the `plot` and the `calculation` tool. We will map results-output to results-input.
 ```bash
-s4n workflow connect demo --from calculation/results --to plot/results
+s4n connect demo --from calculation/results --to plot/results
 ```
 An example output looks like
 ```
@@ -102,7 +102,7 @@ An example output looks like
 ##### Connecting to output
 To get the results file we will connect the result of the plot step to out.
 ```bash
-s4n workflow connect demo --from plot/o_results --to @outputs/out
+s4n connect demo --from plot/o_results --to @outputs/out
 ```
 which outputs
 ```
@@ -112,7 +112,7 @@ which outputs
 
 To commit a simple call is needed:
 ```bash
-s4n workflow save demo
+s4n wsave demo
 ```
 
 We now have a full workflow which can be executed
