@@ -112,7 +112,7 @@ which outputs
 
 To commit a simple call is needed:
 ```bash
-s4n wsave demo
+s4n save demo
 ```
 
 We now have a full workflow which can be executed
